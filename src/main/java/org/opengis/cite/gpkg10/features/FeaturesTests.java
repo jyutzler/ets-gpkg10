@@ -10,6 +10,7 @@ import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.Iterator;
 
 import org.opengis.cite.gpkg10.CommonFixture;
 import org.opengis.cite.gpkg10.ErrorMessage;
@@ -56,6 +57,15 @@ public class FeaturesTests extends CommonFixture {
 				this.contentsFeatureTableNames.add(resultSet.getString(1));
 			}
 		}
+		
+		allowedGeometryTypes.add("GEOMETRY");
+		allowedGeometryTypes.add("POINT");
+		allowedGeometryTypes.add("LINESTRING");
+		allowedGeometryTypes.add("POLYGON");
+		allowedGeometryTypes.add("MULTIPOINT");
+		allowedGeometryTypes.add("MULTILINESTRING");
+		allowedGeometryTypes.add("MULTIPOLYGON");
+		allowedGeometryTypes.add("GEOMETRYCOLLECTION");
 	}
 
 	/**
@@ -309,7 +319,46 @@ public class FeaturesTests extends CommonFixture {
 			assertTrue(foundMatch, ErrorMessage.format(ErrorMessageKeys.FEATURES_GEOMETRY_COLUMNS_INVALID_COL, tableName, columnName));
 		}
 	}
+
+	/**
+	 * Test case
+	 * {@code /opt/features/geometry_columns/data/data_values_geometry_type_name}
+	 *
+	 * @see <a href="_requirement-25" target= "_blank">Vector
+	 *      Features Geometry Columns Geometry Type - Requirement 25</a>
+	 *
+	 * @throws SQLException
+	 *             If an SQL query causes an error
+	 */
+	@Test(description = "See OGC 12-128r12: Requirement 25")
+	public void featureGeometryColumnsDataValuesGeometryType() throws SQLException {
+		// 1
+		final Statement statement = this.databaseConnection.createStatement();
+
+		final ResultSet resultSet = statement.executeQuery("SELECT DISTINCT geometry_type_name FROM gpkg_geometry_columns");
+		
+		// 2
+		while (resultSet.next()){
+			// 3
+			final String geometryTypeName = resultSet.getString("geometry_type_name");
+
+			if (getGeopackageVersion().equals(GeoPackageVersion.V120)){
+				assertTrue(allowedGeometryTypes.contains(geometryTypeName), ErrorMessage.format(ErrorMessageKeys.FEATURES_GEOMETRY_COLUMNS_INVALID_GEOM, geometryTypeName));
+			} else {
+				boolean foundMatch = false;
+				final Iterator<String> iterator = allowedGeometryTypes.iterator();
+				while(iterator.hasNext()){
+					if (geometryTypeName.equalsIgnoreCase(iterator.next())){
+						foundMatch = true;
+						break;
+					}
+				}
+				assertTrue(foundMatch, ErrorMessage.format(ErrorMessageKeys.FEATURES_GEOMETRY_COLUMNS_INVALID_GEOM, geometryTypeName));
+			}
+		}
+	}
 	
+	private final Collection<String> allowedGeometryTypes = new ArrayList<>();
 	private final Collection<String> featureTableNames = new ArrayList<>();
 	private final Collection<String> contentsFeatureTableNames = new ArrayList<>();
 }
