@@ -270,6 +270,45 @@ public class FeaturesTests extends CommonFixture {
 		}
 		assertTrue(foundContents && foundSpatialRefSys, ErrorMessageKeys.FEATURES_GEOMETRY_COLUMNS_NO_FK);
 	}
+
+	/**
+	 * Test case
+	 * {@code /opt/features/geometry_columns/data/data_values_column_name}
+	 *
+	 * @see <a href="_requirement-24" target= "_blank">Vector
+	 *      Features Geometry Columns Column - Requirement 24</a>
+	 *
+	 * @throws SQLException
+	 *             If an SQL query causes an error
+	 */
+	@Test(description = "See OGC 12-128r12: Requirement 24")
+	public void featureGeometryColumnsDataValuesColumnName() throws SQLException {
+		// 1
+		final Statement statement = this.databaseConnection.createStatement();
+
+		final ResultSet resultSet = statement.executeQuery("SELECT table_name, column_name FROM gpkg_geometry_columns;");
+		
+		// 2
+		while (resultSet.next()){
+			final String tableName = resultSet.getString("table_name");
+			final String columnName = resultSet.getString("column_name");
+
+			final Statement statement2 = this.databaseConnection.createStatement();
+
+			final ResultSet resultSet2 = statement2.executeQuery(String.format("PRAGMA table_info('%s');", tableName));
+			
+			boolean foundMatch = false;
+			
+			while (resultSet2.next()) {
+				if (resultSet2.getString("name").equals(columnName)){
+					foundMatch = true;
+					break;
+				}
+			}
+			
+			assertTrue(foundMatch, ErrorMessage.format(ErrorMessageKeys.FEATURES_GEOMETRY_COLUMNS_INVALID_COL, tableName, columnName));
+		}
+	}
 	
 	private final Collection<String> featureTableNames = new ArrayList<>();
 	private final Collection<String> contentsFeatureTableNames = new ArrayList<>();
