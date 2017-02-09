@@ -372,7 +372,7 @@ public class FeaturesTests extends CommonFixture {
 	 *             If an SQL query causes an error
 	 */
 	@Test(description = "See OGC 12-128r12: Requirement 27")
-	public void featureGeometryColumnsDataValuesSRSID() throws SQLException {
+	public void featureGeometryColumnsDataValuesZ() throws SQLException {
 		// 1
 		final Statement statement = this.databaseConnection.createStatement();
 
@@ -387,6 +387,36 @@ public class FeaturesTests extends CommonFixture {
 			
 			if(resultSet2.next()){
 				assertTrue(false, ErrorMessage.format(ErrorMessageKeys.FEATURES_GEOMETRY_COLUMNS_INVALID_Z, resultSet2.getInt("z")));
+			}
+		}
+	}
+
+	/**
+	 * Test case
+	 * {@code /opt/features/geometry_columns/data/data_values_m}
+	 *
+	 * @see <a href="_requirement-28" target= "_blank">Vector
+	 *      Features Geometry Columns M - Requirement 28</a>
+	 *
+	 * @throws SQLException
+	 *             If an SQL query causes an error
+	 */
+	@Test(description = "See OGC 12-128r12: Requirement 28")
+	public void featureGeometryColumnsDataValuesM() throws SQLException {
+		// 1
+		final Statement statement = this.databaseConnection.createStatement();
+
+		final ResultSet resultSet = statement.executeQuery("SELECT m FROM gpkg_geometry_columns");
+		
+		// 2
+		if (resultSet.next()){
+			// 3
+			final Statement statement2 = this.databaseConnection.createStatement();
+
+			final ResultSet resultSet2 = statement2.executeQuery("SELECT m FROM gpkg_geometry_columns WHERE m NOT IN (0,1,2)");
+			
+			if(resultSet2.next()){
+				assertTrue(false, ErrorMessage.format(ErrorMessageKeys.FEATURES_GEOMETRY_COLUMNS_INVALID_M, resultSet2.getInt("m")));
 			}
 		}
 	}

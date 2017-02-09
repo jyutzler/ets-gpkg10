@@ -45,6 +45,7 @@ public class ErrorMessageKeys {
     public static final String FEATURES_GEOMETRY_COLUMNS_INVALID_COL = "FeaturesGeometryColumnsInvalidCol";
     public static final String FEATURES_GEOMETRY_COLUMNS_INVALID_GEOM = "FeaturesGeometryColumnsInvalidGeom";
     public static final String FEATURES_GEOMETRY_COLUMNS_INVALID_Z = "FeaturesGeometryColumnsInvalidZ";
+    public static final String FEATURES_GEOMETRY_COLUMNS_INVALID_M = "FeaturesGeometryColumnsInvalidM";
     public static final String TILES_TABLES_NOT_REFERENCED_IN_CONTENTS = "TilesTablesNotReferencedInContents";
     public static final String VALUES_DO_NOT_VARY_BY_FACTOR_OF_TWO = "ValuesDoNotVaryByFactorOfTwo";
     public static final String INVALID_IMAGE_FORMAT = "InvalidImageFormat";
