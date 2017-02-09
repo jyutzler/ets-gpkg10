@@ -420,6 +420,36 @@ public class FeaturesTests extends CommonFixture {
 			}
 		}
 	}
+
+	/**
+	 * Test case
+	 * {@code /opt/features/vector_features/data/feature_table_one_geometry_column}
+	 *
+	 * @see <a href="_requirement-30" target= "_blank">Vector
+	 *      Features One Geometry Column - Requirement 30</a>
+	 *
+	 * @throws SQLException
+	 *             If an SQL query causes an error
+	 */
+	@Test(description = "See OGC 12-128r12: Requirement 30")
+	public void featureTableOneGeometryColumn() throws SQLException {
+		// 1
+		final Statement statement = this.databaseConnection.createStatement();
+
+		final ResultSet resultSet = statement.executeQuery("SELECT table_name FROM gpkg_contents WHERE data_type='features'");
+		
+		// 2
+		while (resultSet.next()){
+			// 3
+			final String tableName = resultSet.getString("table_name");
+			final Statement statement2 = this.databaseConnection.createStatement();
+
+			final ResultSet resultSet2 = statement2.executeQuery(String.format("SELECT count(*) FROM gpkg_geometry_columns WHERE table_name = '%s'", tableName));
+			
+			resultSet2.next();
+			assertTrue(resultSet2.getInt(1) == 1, ErrorMessageKeys.FEATURES_ONE_GEOMETRY_COLUMN);
+		}
+	}
 	
 	private final Collection<String> allowedGeometryTypes = new ArrayList<>();
 	private final Collection<String> featureTableNames = new ArrayList<>();
