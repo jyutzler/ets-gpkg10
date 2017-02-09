@@ -204,35 +204,13 @@ public class FeaturesTests extends CommonFixture {
 				assertTrue(resultSet.getInt("pk") == 2, ErrorMessageKeys.FEATURES_GEOMETRY_COLUMNS_INVALID);
 			}
 		}
-		
-		// 4
-		final Statement statement2 = this.databaseConnection.createStatement();
-
-		final ResultSet resultSet2 = statement2.executeQuery("PRAGMA foreign_key_list('gpkg_geometry_columns');");
-		
-		boolean foundContents = false;
-		boolean foundSpatialRefSys = false;
-
-		while (resultSet2.next()){
-			final String table = resultSet2.getString("table");
-			if ("gpkg_spatial_ref_sys".equals(table)){
-				if ("srs_id".equals(resultSet2.getString("from")) && "srs_id".equals(resultSet2.getString("to"))){
-					foundSpatialRefSys = true;
-				}
-			} else if ("gpkg_contents".equals(table)){
-				if ("table_name".equals(resultSet2.getString("from")) && "table_name".equals(resultSet2.getString("to"))){
-					foundContents = true;
-				}
-			}
-		}
-		assertTrue(foundContents && foundSpatialRefSys, ErrorMessageKeys.FEATURES_GEOMETRY_COLUMNS_NO_FK);
 	}
 
 	/**
 	 * Test case
-	 * {@code /opt/features/geometry_columns/data/table_def}
+	 * {@code /opt/features/geometry_columns/data/data_values_geometry_columns}
 	 *
-	 * @see <a href="_requirement-21" target= "_blank">Vector
+	 * @see <a href="_requirement-22" target= "_blank">Vector
 	 *      Features Geometry Columns Table - Requirement 22</a>
 	 *
 	 * @throws SQLException
@@ -254,6 +232,43 @@ public class FeaturesTests extends CommonFixture {
 			
 			assertTrue(!resultSet2.next(), ErrorMessageKeys.FEATURES_GEOMETRY_COLUMNS_MISMATCH);
 		}
+	}
+
+	/**
+	 * Test case
+	 * {@code /opt/features/geometry_columns/data/data_values_table_name}
+	 *
+	 * @see <a href="_requirement-23" target= "_blank">Vector
+	 *      Features Geometry Columns Table - Requirement 23</a>
+	 *
+	 * @throws SQLException
+	 *             If an SQL query causes an error
+	 */
+	@Test(description = "See OGC 12-128r12: Requirement 23")
+	public void featureGeometryColumnsDataValuesTableName() throws SQLException {
+		// 1
+		final Statement statement = this.databaseConnection.createStatement();
+
+		final ResultSet resultSet = statement.executeQuery("PRAGMA foreign_key_list('gpkg_geometry_columns');");
+		
+		boolean foundContents = false;
+		boolean foundSpatialRefSys = false;
+
+		// 2
+		while (resultSet.next()){
+			// 3
+			final String table = resultSet.getString("table");
+			if ("gpkg_spatial_ref_sys".equals(table)){
+				if ("srs_id".equals(resultSet.getString("from")) && "srs_id".equals(resultSet.getString("to"))){
+					foundSpatialRefSys = true;
+				}
+			} else if ("gpkg_contents".equals(table)){
+				if ("table_name".equals(resultSet.getString("from")) && "table_name".equals(resultSet.getString("to"))){
+					foundContents = true;
+				}
+			}
+		}
+		assertTrue(foundContents && foundSpatialRefSys, ErrorMessageKeys.FEATURES_GEOMETRY_COLUMNS_NO_FK);
 	}
 	
 	private final Collection<String> featureTableNames = new ArrayList<>();
