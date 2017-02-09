@@ -246,15 +246,18 @@ public class FeaturesTests extends CommonFixture {
 
 	/**
 	 * Test case
-	 * {@code /opt/features/geometry_columns/data/data_values_table_name}
+	 * {@code /opt/features/geometry_columns/data/data_values_table_name} and
+	 * {@code /opt/features/geometry_columns/data/data_values_srs_id}
 	 *
 	 * @see <a href="_requirement-23" target= "_blank">Vector
 	 *      Features Geometry Columns Table - Requirement 23</a>
+	 * and  <a href="_requirement-26" target= "_blank">Vector
+	 *      Features Geometry Columns SRS ID - Requirement 26</a>
 	 *
 	 * @throws SQLException
 	 *             If an SQL query causes an error
 	 */
-	@Test(description = "See OGC 12-128r12: Requirement 23")
+	@Test(description = "See OGC 12-128r12: Requirement 23, 26")
 	public void featureGeometryColumnsDataValuesTableName() throws SQLException {
 		// 1
 		final Statement statement = this.databaseConnection.createStatement();
@@ -354,6 +357,36 @@ public class FeaturesTests extends CommonFixture {
 					}
 				}
 				assertTrue(foundMatch, ErrorMessage.format(ErrorMessageKeys.FEATURES_GEOMETRY_COLUMNS_INVALID_GEOM, geometryTypeName));
+			}
+		}
+	}
+
+	/**
+	 * Test case
+	 * {@code /opt/features/geometry_columns/data/data_values_z}
+	 *
+	 * @see <a href="_requirement-27" target= "_blank">Vector
+	 *      Features Geometry Columns Z - Requirement 27</a>
+	 *
+	 * @throws SQLException
+	 *             If an SQL query causes an error
+	 */
+	@Test(description = "See OGC 12-128r12: Requirement 27")
+	public void featureGeometryColumnsDataValuesSRSID() throws SQLException {
+		// 1
+		final Statement statement = this.databaseConnection.createStatement();
+
+		final ResultSet resultSet = statement.executeQuery("SELECT z FROM gpkg_geometry_columns");
+		
+		// 2
+		if (resultSet.next()){
+			// 3
+			final Statement statement2 = this.databaseConnection.createStatement();
+
+			final ResultSet resultSet2 = statement2.executeQuery("SELECT z FROM gpkg_geometry_columns WHERE z NOT IN (0,1,2)");
+			
+			if(resultSet2.next()){
+				assertTrue(false, ErrorMessage.format(ErrorMessageKeys.FEATURES_GEOMETRY_COLUMNS_INVALID_Z, resultSet2.getInt("z")));
 			}
 		}
 	}
