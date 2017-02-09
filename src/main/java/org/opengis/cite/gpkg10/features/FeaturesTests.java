@@ -168,7 +168,7 @@ public class FeaturesTests extends CommonFixture {
 	 *             If an SQL query causes an error
 	 */
 	@Test(description = "See OGC 12-128r12: Requirement 21")
-	public void featureGeometryColumsTableDef() throws SQLException {
+	public void featureGeometryColumnsTableDef() throws SQLException {
 		// 1
 		final Statement statement = this.databaseConnection.createStatement();
 
@@ -227,6 +227,35 @@ public class FeaturesTests extends CommonFixture {
 		}
 		assertTrue(foundContents && foundSpatialRefSys, ErrorMessageKeys.FEATURES_GEOMETRY_COLUMNS_NO_FK);
 	}
+
+	/**
+	 * Test case
+	 * {@code /opt/features/geometry_columns/data/table_def}
+	 *
+	 * @see <a href="_requirement-21" target= "_blank">Vector
+	 *      Features Geometry Columns Table - Requirement 22</a>
+	 *
+	 * @throws SQLException
+	 *             If an SQL query causes an error
+	 */
+	@Test(description = "See OGC 12-128r12: Requirement 22")
+	public void featureGeometryColumnsDataValues() throws SQLException {
+		// 1
+		final Statement statement = this.databaseConnection.createStatement();
+
+		final ResultSet resultSet = statement.executeQuery("SELECT table_name FROM gpkg_contents WHERE data_type = 'features';");
+
+		// 2
+		if (resultSet.next()){
+			// 3
+			final Statement statement2 = this.databaseConnection.createStatement();
+			
+			final ResultSet resultSet2 = statement2.executeQuery("SELECT table_name FROM gpkg_contents WHERE data_type = 'features' AND table_name NOT IN (SELECT table_name FROM gpkg_geometry_columns);");
+			
+			assertTrue(!resultSet2.next(), ErrorMessageKeys.FEATURES_GEOMETRY_COLUMNS_MISMATCH);
+		}
+	}
+	
 	private final Collection<String> featureTableNames = new ArrayList<>();
 	private final Collection<String> contentsFeatureTableNames = new ArrayList<>();
 }

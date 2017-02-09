@@ -41,6 +41,7 @@ public class ErrorMessageKeys {
     public static final String FEATURES_BINARY_INVALID = "FeaturesBinaryInvalid";
     public static final String FEATURES_GEOMETRY_COLUMNS_INVALID = "FeaturesGeometryColumnsInvalid";
     public static final String FEATURES_GEOMETRY_COLUMNS_NO_FK = "FeaturesGeometryColumnsNoFK";
+    public static final String FEATURES_GEOMETRY_COLUMNS_MISMATCH = "FeaturesGeometryColumnsMismatch";
     public static final String TILES_TABLES_NOT_REFERENCED_IN_CONTENTS = "TilesTablesNotReferencedInContents";
     public static final String VALUES_DO_NOT_VARY_BY_FACTOR_OF_TWO = "ValuesDoNotVaryByFactorOfTwo";
     public static final String INVALID_IMAGE_FORMAT = "InvalidImageFormat";
