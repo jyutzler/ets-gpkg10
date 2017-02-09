@@ -17,6 +17,11 @@
       <class name="org.opengis.cite.gpkg10.SuitePreconditions" />
     </classes>
   </test>
+  <test name="Features">
+    <packages>
+      <package name="org.opengis.cite.gpkg10.features" />
+    </packages>
+  </test>
   <test name="Tiles">
     <packages>
       <package name="org.opengis.cite.gpkg10.tiles" />

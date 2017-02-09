@@ -16,8 +16,14 @@ public class GPKG10 {
             .getBytes(StandardCharsets.US_ASCII);
     /** Application id for OGC GeoPackage 1.0. */
     public static final byte[] APP_GP10 = new String("GP10").getBytes(StandardCharsets.US_ASCII);
+    /** Application id for OGC GeoPackage 1.1. */
+    public static final byte[] APP_GP11 = new String("GP11").getBytes(StandardCharsets.US_ASCII);
+    /** Application id for OGC GeoPackage 1.2. */
+    public static final byte[] APP_GPKG = new String("GPKG").getBytes(StandardCharsets.US_ASCII);
     /** GeoPackage file name extension. */
     public static final String GPKG_FILENAME_SUFFIX = ".gpkg";
     // String that must be returned upon a pragma integrity check
     public static final String PRAGMA_INTEGRITY_CHECK = "ok";
+    // Prefix for a GeoPackage Standard Binary
+    public static final byte[] BINARY_GP = new String("GP").getBytes(StandardCharsets.US_ASCII);
 }
